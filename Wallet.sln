@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wallet.Api", "Wallet.Api\Wallet.Api.csproj", "{DC49519F-61FC-497F-8545-EEA0906875FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wallet.Api", "Wallet.Api\Wallet.Api.csproj", "{9616772D-CB78-4772-B1B7-5215C6BA4904}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DC49519F-61FC-497F-8545-EEA0906875FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC49519F-61FC-497F-8545-EEA0906875FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC49519F-61FC-497F-8545-EEA0906875FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC49519F-61FC-497F-8545-EEA0906875FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9616772D-CB78-4772-B1B7-5215C6BA4904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9616772D-CB78-4772-B1B7-5215C6BA4904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9616772D-CB78-4772-B1B7-5215C6BA4904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9616772D-CB78-4772-B1B7-5215C6BA4904}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
