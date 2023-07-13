@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wallet.Api.Domain;
@@ -12,13 +13,22 @@ namespace Wallet.Api.Controllers;
 public class AccountsController:ControllerBase
 {
     private readonly WalletDbContext _context;
+    private readonly IMapper _mapper;
 
-    public AccountsController(WalletDbContext context)
+    public AccountsController(WalletDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        var accounts = await _context.Accounts.ToListAsync();
+        return Ok(accounts);
+    }
+
+    [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
         var account = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == id);
@@ -34,23 +44,10 @@ public class AccountsController:ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateAccountRequest request)
     {
-        var currency = await 
-            _context.Currencies.FirstOrDefaultAsync(curr => curr.AlphabeticCode == request.CurrencyAlphabeticCode);
-
-        if (currency == null)
-        {
-            // TODO: Provide bad request message
-            // TODO: Add translations for bad request messages 
-            return BadRequest();
-        }
+        var account = _mapper.Map<Account>(request);
         
-        // TODO: Automapper 
-        var account = new Account
-        {
-            Name = request.Name,
-            Currency = currency
-        };
-
+        
+        // TODO: Validation
         await _context.Accounts.AddAsync(account);
         await _context.SaveChangesAsync();
 
