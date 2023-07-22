@@ -34,7 +34,10 @@ public class AccountsController:ControllerBase
         var account = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == id);
         if (account == null)
         {
-            return NotFound();
+            return NotFound(new
+            {
+                Message = "Account not found"
+            });
         }
 
         // TODO: Dto

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wallet.Api.Domain;
@@ -9,42 +10,65 @@ namespace Wallet.Api.Controllers;
 [Route("api/transactions")]
 [Produces("application/json")]
 [Consumes("application/json")]
-public class TransactionsController: ControllerBase
+public class TransactionsController : ControllerBase
 {
     private readonly WalletDbContext _context;
+    private readonly IMapper _mapper;
 
-    public TransactionsController(WalletDbContext context)
+    public TransactionsController(WalletDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-       var transaction = await _context.Transactions.FirstOrDefaultAsync(t => t.Id == id);
-       if (transaction == null)
-       {
-           return NotFound();
-       }
-       
-       // TODO: Map to dto
-       return Ok(transaction);
+        var transaction = await _context.Transactions.Include(x => x.Account).FirstOrDefaultAsync(t => t.Id == id);
+        if (transaction == null)
+        {
+            return NotFound();
+        }
+
+        // TODO: Map to dto
+        return Ok(transaction);
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateTransactionRequest request)
     {
-        // TODO: Add automapper
-        var transaction = new Transaction
+        var account = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == request.AccountId);
+        if (account == null)
         {
-            Name = request.Name,
-            Description = request.Description,
-            Amount = request.Amount
+            return BadRequest(new { message = "Account not found!" });
+        }
+
+        var transaction = _mapper.Map<Transaction>(request);
+
+
+        await using (var dbContextTransaction = await _context.Database.BeginTransactionAsync())
+        {
+
+            await _context.Transactions.AddAsync(transaction);
+
+            account.Balance += GetAmountWithSign(transaction.Type, transaction.Amount);
+            _context.Accounts.Update(account);
+
+            await _context.SaveChangesAsync();
+            await dbContextTransaction.CommitAsync();
+        }
+
+        return Ok(new IdResponse<int>(transaction.Id));
+    }
+
+    private decimal GetAmountWithSign(TransactionType type, decimal amount)
+    {
+        return type switch
+        {
+            TransactionType.Expense => -amount,
+            TransactionType.Transfer => -amount,
+            TransactionType.Income => amount,
+            _ => amount
         };
-        await _context.Transactions.AddAsync(transaction);
-
-        await _context.SaveChangesAsync();
-
-        return Ok(new { transaction.Id });
     }
 }

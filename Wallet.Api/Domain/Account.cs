@@ -1,16 +1,8 @@
 namespace Wallet.Api.Domain;
 
-public class Account
+public class Account : Entity
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    // public Currency Currency { get; set; }
+    public decimal Balance { get; set; }
 }
-
-// public class Currency
-// {
-//     public int Id { get; set; }
-//     public string Name { get; set; }
-//     public string AlphabeticCode { get; set; }
-//     public string NumericCode { get; set; }
-// }
