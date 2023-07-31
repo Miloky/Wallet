@@ -44,6 +44,13 @@ public class AccountsController:ControllerBase
         return Ok(account);
     }
 
+    [HttpGet("{accountId:min(0)}/transactions")]
+    public async Task<IActionResult> Transactions([FromRoute] int accountId)
+    {
+        var transactions = await _context.Transactions.Where(t => t.AccountId == accountId).ToListAsync();
+        return Ok(transactions);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateAccountRequest request)
     {
