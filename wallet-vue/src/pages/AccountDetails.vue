@@ -1,6 +1,10 @@
 <template>
   <div class="q-pa-md">
-    <div class="q-py-md row justify-end">
+    <div class="q-py-md row justify-between">
+      <div class="row items-center">
+        <span>{{ account.name }}:</span>
+        <span>UAH {{ account.balance }}</span>
+      </div>
       <q-btn icon="add" color="primary" label="Add" @click="openDialog" />
     </div>
 
@@ -39,7 +43,12 @@
 
             <q-input filled v-model.number="transactionInfo.amount" label="amount" />
             <div>
-              <q-btn label="Submit" color="primary" :loading="creatingTransaction"  @click="create" />
+              <q-btn
+                label="Submit"
+                color="primary"
+                :loading="creatingTransaction"
+                @click="create"
+              />
               <!-- <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" /> -->
             </div>
           </q-form>
@@ -53,7 +62,7 @@
       row-key="name"
       :loading="loading"
       :hide-pagination="true"
-      :pagination="{rowsPerPage: 0}"
+      :pagination="{ rowsPerPage: 0 }"
     >
       <template v-slot:body-cell-amount="props">
         <q-td :props="props">
@@ -80,24 +89,22 @@
 <script setup lang="ts">
 import useAccountTransactions from '@/composables/use-account-transactions';
 import useAccounts from '@/composables/use-accounts';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { TransactionType } from '@/constants/transaction-type';
 
 const isDialogOpen = ref<boolean>(false);
+const account = reactive<any>({ name: '', balance: null });
 
-const closeDialog = ():void => {
+const closeDialog = (): void => {
   isDialogOpen.value = false;
-}
+};
 
 const openDialog = (): void => {
   isDialogOpen.value = true;
-}
+};
 
 const creatingTransaction = ref<boolean>(false);
-
-
-
 
 interface TransactionInfo {
   transactionType: TransactionType;
@@ -113,11 +120,15 @@ const transactionInfo = reactive<TransactionInfo>({
   description: ''
 });
 
-const { loading: accountsLoading, accounts } = useAccounts();
+const { loading: accountsLoading, accounts, loadAccount } = useAccounts();
 const route = useRoute();
-const { transactions, loading, error, createTransaction, load: loadTransactions } = useAccountTransactions(
-  route.params.id as unknown as number
-);
+const {
+  transactions,
+  loading,
+  error,
+  createTransaction,
+  load: loadTransactions
+} = useAccountTransactions(route.params.id as unknown as number);
 
 const accountOptions = computed(() =>
   accounts.value.map((acc) => ({ value: acc.id, label: acc.name }))
@@ -168,12 +179,21 @@ const create = async (): Promise<void> => {
     name: 'Some name',
     type: transactionInfo.transactionType
   });
+  await loadAccountInternal();
   await loadTransactions();
   creatingTransaction.value = false;
   closeDialog();
-}
+};
 
+const loadAccountInternal = async (): Promise<void> => {
+  const acc = await loadAccount(route.params.id as unknown as number);
+  account.name = acc.name;
+  account.balance = acc.balance;
+};
 
+onMounted(async () => {
+  await loadAccountInternal();
+});
 </script>
 
 <style></style>

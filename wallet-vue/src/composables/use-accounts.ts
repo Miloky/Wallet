@@ -21,12 +21,20 @@ export default function useAccounts() {
     console.log(accounts);
   };
 
+
+  const loadAccount = async (id:number): Promise<Account> => {
+    // TODO: Error handling
+    const response = await axios.get<Account>(`${host}/api/accounts/${id}`);
+    return response.data;
+  }
+
   onMounted(() => {
     load();
   });
 
   return {
     loading,
-    accounts
+    accounts,
+    loadAccount
   };
 }
