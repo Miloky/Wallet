@@ -47,7 +47,8 @@ public class AccountsController:ControllerBase
     [HttpGet("{accountId:min(0)}/transactions")]
     public async Task<IActionResult> Transactions([FromRoute] int accountId)
     {
-        var transactions = await _context.Transactions.Where(t => t.AccountId == accountId).ToListAsync();
+        // TODO: Order by transaction time not by creation time, they have different meaning
+        var transactions = await _context.Transactions.Where(t => t.AccountId == accountId).OrderByDescending(x=>x.CreatedOn).ToListAsync();
         return Ok(transactions);
     }
 
