@@ -27,7 +27,6 @@ import { onBeforeMount, ref } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
 import { debounce } from 'quasar';
 import WalletIcon from '@/components/icons/WalletIcon.vue';
-
 const { push } = useRouter();
 
 const height = ref<number>(window.innerHeight);

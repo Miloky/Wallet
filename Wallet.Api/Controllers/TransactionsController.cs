@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wallet.Api.Domain;
@@ -10,6 +11,7 @@ namespace Wallet.Api.Controllers;
 [Route("api/transactions")]
 [Produces("application/json")]
 [Consumes("application/json")]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public class TransactionsController : ControllerBase
 {
     private readonly WalletDbContext _context;

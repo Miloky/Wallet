@@ -26,10 +26,10 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { useAccounts } from '@/composables';
+// import { useAccounts } from '@/composables';
 
 const router = useRouter();
-const { accounts } = useAccounts();
+// const { accounts } = useAccounts();
 
 const clickHandler = (accountId: number) => {
   router.push(`/account/${accountId}`);
