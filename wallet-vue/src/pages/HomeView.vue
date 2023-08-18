@@ -1,4 +1,7 @@
 <template>
+  <div class="row justify-end">
+    <q-btn icon="add" color="primary" label="Add" />
+  </div>
   <div class="row">
     <div
       class="col-4 q-gutter-sm"
@@ -10,13 +13,7 @@
         <q-card-section horizontal>
           <q-card-section class="q-pt-xs">
             <div class="text-h5 q-mt-sm q-mb-xs">{{ acc.name }}</div>
-            <div class="text-caption text-grey">
-              {{ acc.balance.toFixed(2) }}
-            </div>
-          </q-card-section>
-
-          <q-card-section class="col-5 flex flex-center">
-            <q-img class="rounded-borders" src="https://cdn.quasar.dev/img/parallax2.jpg" />
+            <div class="text-caption text-grey">{{ acc.balance.toFixed(2) }} UAH</div>
           </q-card-section>
         </q-card-section>
       </q-card>
@@ -26,10 +23,10 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-// import { useAccounts } from '@/composables';
+import { useAccounts } from '@/composables';
 
 const router = useRouter();
-// const { accounts } = useAccounts();
+const { accounts } = useAccounts();
 
 const clickHandler = (accountId: number) => {
   router.push(`/account/${accountId}`);

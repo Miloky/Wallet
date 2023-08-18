@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { TransactionType } from '@/constants/transaction-type';
+import authService from '@/router/auth-service';
 
 const host = 'https://localhost:7050';
 
@@ -21,9 +22,14 @@ export default function useAccountTransactions(accountId: number) {
   // TODO: Return type
   const load = async () => {
     loading.value = true;
+    const token = await authService.getAccessToken();
     try {
       // TODO: Replace any
-      const response = await axios.get<any[]>(`${host}/api/accounts/${accountId}/transactions`);
+      const response = await axios.get<any[]>(`${host}/api/accounts/${accountId}/transactions`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       transactions.value = response.data;
     } catch {
       // TODO: Add appropriate error handling
@@ -35,7 +41,12 @@ export default function useAccountTransactions(accountId: number) {
   };
 
   const createTransaction = async (transaction: CreateTransactionRequest): Promise<any> => {
-    const response = await axios.post(`${host}/api/transactions`, transaction);
+    const token = await authService.getAccessToken();
+    const response = await axios.post(`${host}/api/transactions`, transaction, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     return response.data;
   };
 

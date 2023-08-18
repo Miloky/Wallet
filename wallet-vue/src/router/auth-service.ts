@@ -40,6 +40,11 @@ class AuthService {
     mgr.signinRedirect({ state: '/' });
   }
 
+  public async getAccessToken(){
+    const user =  await mgr.getUser();
+    return user?.access_token;
+  }
+
   public api() {
     mgr.getUser().then(function (user) {
       const url = 'https://localhost:6001/identity';

@@ -8,8 +8,8 @@
       <q-btn icon="add" color="primary" label="Add" @click="openDialog" />
     </div>
 
-    <q-dialog v-model="isDialogOpen">
-      <q-card>
+    <q-dialog v-model="isDialogOpen" >
+      <q-card style="width: 475px;">
         <q-card-section>
           <q-btn-toggle
             v-model="transactionInfo.transactionType"
