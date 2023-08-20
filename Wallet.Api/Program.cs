@@ -1,6 +1,4 @@
 using System.Reflection;
-using Duende.IdentityServer.Models;
-using Duende.IdentityServer.Test;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Wallet.Api;
@@ -8,6 +6,8 @@ using Wallet.Api.Controllers;
 using Wallet.Api.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
 
 builder.Services.AddControllers();
 
@@ -16,7 +16,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(BalanceController)));
 builder.Services.AddDbContext<WalletDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
@@ -26,7 +25,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Authority = "https://localhost:7050";
         options.Audience = "weatherapi";
 
-        options.TokenValidationParameters.ValidTypes = new[] {"at+jwt"};
+        options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
     });
 
 
@@ -37,11 +36,21 @@ builder.Services.AddIdentityServer(options =>
         options.Events.RaiseInformationEvents = true;
         options.Events.RaiseSuccessEvents = true;
     })
-    .AddTestUsers(Config.Users)
-    .AddInMemoryClients(Config.Clients)
-    .AddInMemoryApiResources(Config.ApiResources)
-    .AddInMemoryApiScopes(Config.ApiScopes)
-    .AddInMemoryIdentityResources(Config.IdentityResources);
+    .AddConfigurationStore(options =>
+    {
+        options.ConfigureDbContext = b => b.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString),
+            o => o.MigrationsAssembly(migrationsAssembly));
+    })
+    .AddOperationalStore(options =>
+    {
+        options.ConfigureDbContext = b => b.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString),
+            o => o.MigrationsAssembly(migrationsAssembly));
+    })
+    .AddTestUsers(Config.Users);
+    //.AddInMemoryClients(Config.Clients)
+    //.AddInMemoryApiResources(Config.ApiResources)
+    //.AddInMemoryApiScopes(Config.ApiScopes)
+    //.AddInMemoryIdentityResources(Config.IdentityResources);
 
 var app = builder.Build();
 app.UseCors(options =>
@@ -50,6 +59,8 @@ app.UseCors(options =>
     options.AllowAnyMethod();
     options.AllowAnyOrigin();
 });
+
+Config.InitializeDatabase(app);
 
 app.UseStaticFiles();
 app.UseRouting();
