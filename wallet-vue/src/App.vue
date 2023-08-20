@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lff" container :style="{ height: `${height}px` }" class="shadow-2">
+  <q-layout view="lHh Lpr lff" container :style="{ height: `${height}px` }">
     <q-header elevated>
       <q-toolbar>
         <!-- <WalletIcon class="cursor-pointer" @click="navigateHome" /> -->
