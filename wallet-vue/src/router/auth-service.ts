@@ -3,10 +3,10 @@ import { UserManager } from 'oidc-client';
 const config = {
   authority: 'https://localhost:7050',
   client_id: 'interactive',
-  redirect_uri: 'http://localhost:5173/callback',
+  redirect_uri: 'http://localhost:5173/',
   response_type: 'code',
-  client_secret: 'SuperSecretPassword',
   scope: 'openid profile weatherapi.read',
+  post_logout_redirect_uri: 'http://localhost:5173/'
 };
 
 export const mgr = new UserManager(config);
@@ -23,13 +23,6 @@ function log(arg1: any, arg2?: any) {
     document!.getElementById('results')!.innerHTML += msg + '\r\n';
   });
 }
-mgr.getUser().then(function (user) {
-  if (user) {
-    log('User logged in', user.profile);
-  } else {
-    log('User not logged in');
-  }
-});
 
 mgr.events.addUserSignedOut(function () {
   log('User signed out of IdentityServer');
@@ -57,10 +50,6 @@ class AuthService {
       xhr.setRequestHeader('Authorization', 'Bearer ' + user!.access_token);
       xhr.send();
     });
-  }
-
-  public logout() {
-    mgr.signoutRedirect();
   }
 }
 
