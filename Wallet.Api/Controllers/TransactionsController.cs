@@ -63,6 +63,38 @@ public class TransactionsController : ControllerBase
         return Ok(new IdResponse<int>(transaction.Id));
     }
 
+    // TODO Add validation for id
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var transaction = await _context.Transactions.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (transaction == null)
+        {
+            return NotFound($"Transaction with id={id} was not found!");
+        }
+
+
+        await using (var dbContextTransaction = await _context.Database.BeginTransactionAsync())
+        {
+            try
+            {
+                var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == transaction.AccountId)!;
+                _context.Transactions.Remove(transaction);
+                account.Balance -= GetAmountWithSign(transaction.Type, transaction.Amount);
+                await _context.SaveChangesAsync();
+                await dbContextTransaction.CommitAsync();
+
+            }
+            catch
+            {
+                await dbContextTransaction.RollbackAsync();
+            }
+        }
+
+        return Ok();
+    }
+
     private decimal GetAmountWithSign(TransactionType type, decimal amount)
     {
         return type switch

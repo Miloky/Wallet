@@ -16,6 +16,7 @@ interface CreateTransactionRequest {
 // TODO: Add types
 export default function useAccountTransactions(accountId: number) {
   const loading = ref<boolean>(false);
+  // TODO: Replace any[]
   const transactions = ref<any[]>([]);
   const error = ref<string | null>(null);
 
@@ -50,6 +51,21 @@ export default function useAccountTransactions(accountId: number) {
     return response.data;
   };
 
+  // TODO: Add return type
+  // TODO: Add exception handling
+  const deleteTransaction = async (transactionId: number): Promise<any> => {
+    const token = await authService.getAccessToken();
+    await axios.delete(`${host}/api/transactions/${transactionId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+
+    transactions.value = transactions.value.filter(t=>t.id!== transactionId);
+
+  }
+
   onMounted(async () => {
     await load();
   });
@@ -59,6 +75,7 @@ export default function useAccountTransactions(accountId: number) {
     loading,
     transactions,
     error,
-    createTransaction
+    createTransaction,
+    deleteTransaction
   };
 }

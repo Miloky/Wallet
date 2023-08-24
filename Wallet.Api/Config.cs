@@ -165,9 +165,9 @@ public static class Config
 
           AllowedGrantTypes = GrantTypes.Code,
 
-          RedirectUris = {"http://localhost:5173/callback"},
-          FrontChannelLogoutUri = "http://localhost:5173/signout-oidc",
-          PostLogoutRedirectUris = {"http://localhost:5173/signout-callback-oidc"},
+          RedirectUris = {"http://localhost:5173/"},
+          FrontChannelLogoutUri = "http://localhost:5173/",
+          PostLogoutRedirectUris = {"http://localhost:5173/"},
           RequireClientSecret = false,
 
           AllowOfflineAccess = true,
