@@ -8,8 +8,8 @@
       <q-btn icon="add" color="primary" label="Add" @click="openDialog" />
     </div>
 
-    <q-dialog v-model="isDialogOpen" >
-      <q-card style="width: 475px;">
+    <q-dialog v-model="isDialogOpen">
+      <q-card style="width: 475px">
         <q-card-section>
           <q-btn-toggle
             v-model="transactionInfo.transactionType"
@@ -73,6 +73,28 @@
           </div>
         </q-td>
       </template>
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props">
+          <q-btn icon="more_vert" class="more_btn">
+            <q-menu anchor="bottom middle">
+              <q-list dense>
+                <q-item clickable v-close-popup>
+                  <q-item-section side>
+                      <q-icon name="edit"/>
+                  </q-item-section>
+                  <q-item-section>Edit</q-item-section>
+                </q-item>
+                <q-item clickable @click="()=>handleDelete(props.row.id)" v-close-popup>
+                  <q-item-section side>
+                      <q-icon name="delete"/>
+                  </q-item-section>
+                  <q-item-section>Delete</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </q-td>
+      </template>
       <template v-slot:no-data>
         <div style="text-align: center; width: 100%" v-if="!loading && error">{{ error }}</div>
         <div
@@ -127,7 +149,8 @@ const {
   loading,
   error,
   createTransaction,
-  load: loadTransactions
+  load: loadTransactions,
+  deleteTransaction
 } = useAccountTransactions(route.params.id as unknown as number);
 
 const accountOptions = computed(() =>
@@ -166,6 +189,10 @@ const columns = [
     label: 'Amount',
     field: 'amount',
     format: (val: any) => `${val}`
+  },
+  {
+    name: 'actions',
+    label: 'Actions'
   }
 ];
 
@@ -191,9 +218,27 @@ const loadAccountInternal = async (): Promise<void> => {
   account.balance = acc.balance;
 };
 
+
+const handleDelete = async (id: number): Promise<void> => {
+  await deleteTransaction(id);
+  await loadAccountInternal();
+}
+
 onMounted(async () => {
   await loadAccountInternal();
 });
 </script>
 
-<style></style>
+<style lang="scss">
+.more_btn {
+  padding: 0;
+  &::before,
+  &:active::before {
+    box-shadow: none !important;
+  }
+
+  * {
+    background: transparent;
+  }
+}
+</style>
