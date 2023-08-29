@@ -10,6 +10,11 @@ interface Account {
   balance: number;
 }
 
+interface CreateAccountRequest {
+  name: string;
+  initialBalance: number;
+}
+
 export default function useAccounts() {
   const loading = ref<boolean>(false);
   const accounts = ref<Account[]>([]);
@@ -38,6 +43,16 @@ export default function useAccounts() {
     return response.data;
   };
 
+  const createAccount = async (req: CreateAccountRequest): Promise<void> => {
+    const token = await authService.getAccessToken();
+
+    const response = await axios.post(`${host}/api/accounts`, req, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  };
+
   onMounted(() => {
     load();
   });
@@ -45,6 +60,8 @@ export default function useAccounts() {
   return {
     loading,
     accounts,
-    loadAccount
+    loadAccount,
+    load,
+    createAccount
   };
 }

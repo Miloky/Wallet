@@ -1,5 +1,6 @@
 import '@quasar/extras/material-icons/material-icons.css';
 import 'quasar/src/css/index.sass';
+import './common.scss';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
