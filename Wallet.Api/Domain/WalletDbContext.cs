@@ -10,6 +10,7 @@ public class WalletDbContext: DbContext
     
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Account> Accounts { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {

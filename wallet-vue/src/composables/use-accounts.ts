@@ -53,6 +53,16 @@ export default function useAccounts() {
     });
   };
 
+  const deleteAccount = async (id: number): Promise<void> => {
+    // TODO: Exception handling
+    const token = await authService.getAccessToken();
+    await axios.delete(`${host}/api/accounts/${id}`,{
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  }
+
   onMounted(() => {
     load();
   });
@@ -61,6 +71,7 @@ export default function useAccounts() {
     loading,
     accounts,
     loadAccount,
+    deleteAccount,
     load,
     createAccount
   };

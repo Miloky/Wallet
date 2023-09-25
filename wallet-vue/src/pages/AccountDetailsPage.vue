@@ -8,9 +8,17 @@
       <q-btn icon="add" color="primary" label="Add" @click="openDialog" />
     </div>
 
-    <q-dialog v-model="isDialogOpen">
-      <q-card style="width: 475px">
+    <q-dialog v-model="isDialogOpen" persistent>
+      <q-card style="width: 100%; width: 475px">
+        <q-toolbar>
+        <q-avatar icon="account_balance"> </q-avatar>
+
+        <q-toolbar-title>Create Transaction</q-toolbar-title>
+
+        <q-btn flat round dense icon="close" v-close-popup />
+      </q-toolbar>
         <q-card-section>
+          <q-form class="q-gutter-md">
           <q-btn-toggle
             v-model="transactionInfo.transactionType"
             spread
@@ -32,7 +40,6 @@
             map-options
             label="Account"
           />
-          <q-form class="q-gutter-md">
             <q-input
               filled
               v-model="transactionInfo.description"
@@ -42,18 +49,14 @@
             />
 
             <q-input filled v-model.number="transactionInfo.amount" label="amount" />
-            <div>
-              <q-btn
-                label="Submit"
-                color="primary"
-                :loading="creatingTransaction"
-                @click="create"
-              />
-              <!-- <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" /> -->
-            </div>
           </q-form>
         </q-card-section>
+        <q-card-actions align="right">
+        <q-btn color="primary" flat label="Cancel" @click="closeDialog" />
+        <q-btn color="primary" label="Create" @click="create" />
+      </q-card-actions>
       </q-card>
+      
     </q-dialog>
     <q-table
       title=""
@@ -117,6 +120,7 @@ import { TransactionType } from '@/constants/transaction-type';
 
 const isDialogOpen = ref<boolean>(false);
 const account = reactive<any>({ name: '', balance: null });
+const route = useRoute();
 
 const closeDialog = (): void => {
   isDialogOpen.value = false;
@@ -137,13 +141,12 @@ interface TransactionInfo {
 
 const transactionInfo = reactive<TransactionInfo>({
   transactionType: 1,
-  account: 1,
+  account: parseInt(route.params.id),
   amount: 0,
   description: ''
 });
 
 const { loading: accountsLoading, accounts, loadAccount } = useAccounts();
-const route = useRoute();
 const {
   transactions,
   loading,

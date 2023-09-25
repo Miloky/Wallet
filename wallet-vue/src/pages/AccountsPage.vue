@@ -28,19 +28,12 @@
   </q-dialog>
   <div class="row" style="margin-left: -20px; margin-right: -20px">
     <div
-      class="col-4 q-py-md"
+      class="col-12 col-md-4 q-py-md"
       style="padding-left: 20px; padding-right: 20px"
       v-for="acc in accounts"
       v-bind:key="acc.id"
       @click="() => clickHandler(acc.id)"
     >
-      <!-- <q-card class="my-card cursor-pointer" flat bordered>
-        <q-card-section class="q-pt-xs col">
-          <div class="text-h5 q-mt-sm q-mb-xs">{{ acc.name }}</div>
-          <div class="text-caption text-grey">{{ acc.balance.toFixed(2) }} UAH</div>
-        </q-card-section>
-      </q-card> -->
-
       <q-card class="my-card cursor-pointer">
         <q-card-section horizontal>
           <q-card-section class="q-pt-xs col">
@@ -58,7 +51,7 @@
                   </q-item-section>
                   <q-item-section>Edit</q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup>
+                <q-item clickable v-close-popup @click="()=>deleteHandler(acc.id)">
                   <q-item-section side>
                       <q-icon name="delete"/>
                   </q-item-section>
@@ -81,8 +74,7 @@ import { useAccounts } from '@/composables';
 import { reactive, Ref, ref } from 'vue';
 
 const router = useRouter();
-const expanded = ref<boolean>(false);
-const { accounts, load: loadAccounts, createAccount } = useAccounts();
+const { accounts, load: loadAccounts, createAccount, deleteAccount } = useAccounts();
 
 const isDialogOpen: Ref<boolean> = ref<boolean>(false);
 const newAccountModel = reactive({ name: '', initialBalance: '' });
@@ -93,10 +85,6 @@ const resetNewAccountModel = () => {
 
 const openDialog = () => {
   isDialogOpen.value = true;
-};
-
-const expandHandler = (): void => {
-  expanded.value = !expanded.value;
 };
 
 const closeDialog = () => {
@@ -117,6 +105,12 @@ const createAccountHanlder = async () => {
   closeDialog();
   resetNewAccountModel();
 };
+
+const deleteHandler = async (accountId: number): Promise<void> => {
+  await deleteAccount(accountId);
+  await loadAccounts();
+}
+
 </script>
 
 <style scoped sass>

@@ -12,7 +12,7 @@ namespace Wallet.Api.Controllers;
 [Produces("application/json")]
 [Consumes("application/json")]
 [Authorize(AuthenticationSchemes = "Bearer")]
-public class AccountsController:ControllerBase
+public class AccountsController : ControllerBase
 {
     private readonly WalletDbContext _context;
     private readonly IMapper _mapper;
@@ -50,7 +50,7 @@ public class AccountsController:ControllerBase
     public async Task<IActionResult> Transactions([FromRoute] int accountId)
     {
         // TODO: Order by transaction time not by creation time, they have different meaning
-        var transactions = await _context.Transactions.Where(t => t.AccountId == accountId).OrderByDescending(x=>x.CreatedOn).ToListAsync();
+        var transactions = await _context.Transactions.Where(t => t.AccountId == accountId).OrderByDescending(x => x.CreatedOn).ToListAsync();
         return Ok(transactions);
     }
 
@@ -58,12 +58,27 @@ public class AccountsController:ControllerBase
     public async Task<IActionResult> Create(CreateAccountRequest request)
     {
         var account = _mapper.Map<Account>(request);
-        
-        
+
+
         // TODO: Validation
         await _context.Accounts.AddAsync(account);
         await _context.SaveChangesAsync();
 
         return Ok(new IdResponse<int>(account.Id));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var account = await _context.Accounts.Include(x => x.Transactions).FirstOrDefaultAsync(x => x.Id == id);
+        if (account == null)
+        {
+            return NotFound("Account not found");
+        }
+
+        _context.Remove(account);
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 }
