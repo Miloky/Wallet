@@ -2,4 +2,6 @@
 bin
 obj
 .vscode
+.vs
+wwwroot/uploads
 *.DotSettings.user

@@ -1,8 +1,11 @@
 echo "Starting docker...";
 docker-compose up -d;
 echo "Docker running...";
+
+
+# Migrate database
 cd ./Wallet.Api
-dotnet ef database update --project ./Wallet.Api.csproj
+dotnet ef database update --project ./Wallet.Api.csproj --context WalletDbContext
 cd ..
 
 
