@@ -1,6 +1,10 @@
 version: '3.8'
+
+name: 'wallet-infrastructure'
+
 services:
   db:
+    container_name: database
     image: mysql:8.0
     cap_add:
       - SYS_NICE
@@ -13,6 +17,14 @@ services:
     volumes:
       - db:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  azurite:
+    container_name: azurite
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - 10000:10000
+      - 10001:10001
+      - 10002:10002
+    command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --location /data"
 volumes:
   db:
     driver: local

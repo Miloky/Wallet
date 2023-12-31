@@ -1,17 +1,19 @@
 -- Active: 1697040233025@@127.0.0.1@3306@Wallet
 
-CREATE TABLE `TransactionCategory`(
-    Id INT NOT NULL AUTO_INCREMENT,
-    Name VARCHAR(255) NOT NULL,
-    ParentId INT,
-    PRIMARY KEY (ID),
-    FOREIGN KEY (ParentId) REFERENCES TransactionCategory(Id)  
-);
+-- CREATE TABLE `TransactionCategory`(
+--     Id INT NOT NULL AUTO_INCREMENT,
+--     Name VARCHAR(255) NOT NULL,
+--     ParentCategoryId INT,
+--     PRIMARY KEY (ID),
+--     FOREIGN KEY (ParentCategoryId) REFERENCES TransactionCategory(Id)  
+-- );
+
+delete from `TransactionCategory`;
 
 insert into `TransactionCategory`(`Name`) values ('Food & Drinks');
 SET @Id = LAST_INSERT_ID();
 
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Groceries', @Id),
 ('Restaurant, fast-food', @Id),
 ('Bar, cafe', @Id);
@@ -23,7 +25,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 insert into `TransactionCategory`(`Name`) values ('Shopping');
 SET @Id = LAST_INSERT_ID();
 
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Clothes & shoes', @Id),
 ('Jewels, accessories', @Id),
 ('Health and beauty', @Id),
@@ -39,7 +41,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Housing');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Rent', @Id),
 ('Mortgage', @Id),
 ('Energy, utilities', @Id),
@@ -50,7 +52,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Transportation');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Public transport', @Id),
 ('Taxi', @Id),
 ('Long distance', @Id),
@@ -59,7 +61,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Vehicle');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Fuel', @Id),
 ('Parking', @Id),
 ('Vehicle maintenance', @Id),
@@ -70,7 +72,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Life & Entertainment');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Health care, doctor', @Id),
 ('Wellness, beauty', @Id),
 ('Active sport, fitness', @Id),
@@ -87,7 +89,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Communication, PC');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Phone, cell phone', @Id),
 ('Internet', @Id),
 ('Software, apps, games', @Id),
@@ -95,7 +97,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Financial expenses');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Taxes', @Id),
 ('Insurances', @Id),
 ('Loan, interests', @Id),
@@ -108,7 +110,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Investments');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Realty', @Id),
 ('Vehicles, chattels', @Id),
 ('Financial investments', @Id),
@@ -118,7 +120,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Income');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Wage, invoices', @Id),
 ('Interests, dividends', @Id),
 ('Sale', @Id),
@@ -134,7 +136,7 @@ INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
 
 insert into `TransactionCategory`(`Name`) values ('Other');
 SET @Id = LAST_INSERT_ID();
-INSERT INTO `TransactionCategory`(`Name`, `ParentId`) VALUES
+INSERT INTO `TransactionCategory`(`Name`, `ParentCategoryId`) VALUES
 ('Missing', @Id);
 
 show tables;
