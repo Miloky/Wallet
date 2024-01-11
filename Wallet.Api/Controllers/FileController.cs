@@ -26,7 +26,6 @@ public class FileController : ControllerBase
 
 
         var file = HttpContext.Request.Form.Files.FirstOrDefault();
-        file.
         if (file == null)
         {
             return BadRequest("File is null");
