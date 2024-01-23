@@ -11,8 +11,8 @@ using Wallet.Api.Domain;
 namespace Wallet.Api.Migrations
 {
     [DbContext(typeof(WalletDbContext))]
-    [Migration("20231113222823_TransactionCategory")]
-    partial class TransactionCategory
+    [Migration("20240118081019_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
