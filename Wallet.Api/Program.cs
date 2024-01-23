@@ -7,6 +7,7 @@ using Wallet.Api.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var jwtBearerSettings = builder.Configuration.GetSection("JwtBearerSettings").Get<JwtBearerSettings>();
 var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
 
 builder.Services.AddControllers();
@@ -22,10 +23,11 @@ builder.Services.AddDbContext<WalletDbContext>(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = "https://localhost:7050";
-        options.Audience = "weatherapi";
-
-        options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+        options.Authority = jwtBearerSettings.Authority;
+        options.Audience = jwtBearerSettings.Audience;
+        options.RequireHttpsMetadata =jwtBearerSettings.RequireHttpsMetadata;
+        options.TokenValidationParameters.ValidateIssuer = false;
+        options.TokenValidationParameters.ValidTypes = jwtBearerSettings.ValidTypes;
     });
 
 
@@ -47,10 +49,10 @@ builder.Services.AddIdentityServer(options =>
             o => o.MigrationsAssembly(migrationsAssembly));
     })
     .AddTestUsers(Config.Users);
-    //.AddInMemoryClients(Config.Clients)
-    //.AddInMemoryApiResources(Config.ApiResources)
-    //.AddInMemoryApiScopes(Config.ApiScopes)
-    //.AddInMemoryIdentityResources(Config.IdentityResources);
+//.AddInMemoryClients(Config.Clients)
+//.AddInMemoryApiResources(Config.ApiResources)
+//.AddInMemoryApiScopes(Config.ApiScopes)
+//.AddInMemoryIdentityResources(Config.IdentityResources);
 
 var app = builder.Build();
 app.UseCors(options =>
